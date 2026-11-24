@@ -1,0 +1,26 @@
+{
+  "name": "dungeon-escape",
+  "version": "1.0.0",
+  "description": "2D Platformer / Puzzle Game - Dungeon Escape",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "serve": "node server.js",
+    "build:win": "electron-packager . \"Dungeon Escape\" --platform=win32 --arch=x64 --out=dist --overwrite",
+    "build:linux": "electron-packager . \"Dungeon Escape\" --platform=linux --arch=x64 --out=dist --overwrite"
+  },
+  "keywords": [
+    "game",
+    "platformer",
+    "puzzle",
+    "dungeon-escape",
+    "pixel-art",
+    "html5"
+  ],
+  "author": "Antigravity Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@electron/packager": "^19.0.3",
+    "electron": "^45.3.4"
+  }
+}

@@ -1,0 +1,11 @@
+# Dependencies
+node_modules/
+
+# Production builds (binaries exceed GitHub 100MB limit)
+dist/
+builds/
+
+# OS files
+.DS_Store
+Thumbs.db
+*.log

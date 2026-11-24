@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dungeon Escape - 2D Platformer / Puzzle Game</title>
+    <!-- Pixel Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <div id="game-container">
+            <!-- Game Canvas -->
+            <canvas id="game-canvas"></canvas>
+
+            <!-- Gameplay HUD Overlay -->
+            <div id="hud" class="hidden">
+                <div class="hud-top-bar">
+                    <div class="hud-left">
+                        <div id="hud-hearts">❤️❤️❤️</div>
+                        <div id="hud-keys">🔑 0</div>
+                    </div>
+                    <div class="hud-center">
+                        <div id="hud-gems">💎 0/3</div>
+                        <div id="hud-timer">⏱ 00:00.0</div>
+                    </div>
+                    <div class="hud-right">
+                        <div id="hud-checkpoint">🚩 Checkpoint: <span class="dormant">Boshlanish</span></div>
+                        <button id="btn-pause-hud" class="btn btn-sm">⏸ PAUZA</button>
+                    </div>
+                </div>
+                <div id="hud-hint" class="hud-hint-bar">💡 Maslahat</div>
+            </div>
+
+            <!-- Title / Main Menu Screen -->
+            <div id="screen-title" class="overlay-screen">
+                <div class="panel">
+                    <h1 class="game-title">DUNGEON ESCAPE</h1>
+                    <p class="subtitle">Qadimiy Zindondan Qochish Sarguzashti</p>
+                    <div class="btn-group">
+                        <button id="btn-play" class="btn primary">▶ O'YINNI BOSHLASH</button>
+                        <button id="btn-levels" class="btn">🗺 LEVEL TANLASH</button>
+                        <button id="btn-settings" class="btn">⚙ SOZLAMALAR</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level Select Screen -->
+            <div id="screen-level-select" class="overlay-screen hidden">
+                <div class="panel" style="max-width: 960px;">
+                    <h2>DARAJALAR XARITASI (LEVELS)</h2>
+                    <div id="level-grid"></div>
+                    <div class="btn-row" style="margin-top: 10px;">
+                        <button id="btn-back-levels" class="btn">◀ ORQAGA</button>
+                        <button id="btn-unlock-all" class="btn primary">🔓 HAMMA LEVELLARNI OCHISH</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pause Modal -->
+            <div id="modal-pause" class="modal hidden">
+                <div class="panel">
+                    <h2>PAUZA</h2>
+                    <div class="btn-group">
+                        <button id="btn-resume" class="btn primary">DAVOM ETTIRISH</button>
+                        <button id="btn-restart" class="btn">LEVELNI QAYTA BOSHLASH</button>
+                        <button id="btn-pause-settings" class="btn">SOZLAMALAR</button>
+                        <button id="btn-pause-levels" class="btn">LEVEL TANLASH</button>
+                        <button id="btn-pause-menu" class="btn">BOSH MENYU</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Level Complete Modal -->
+            <div id="modal-win" class="modal hidden">
+                <div class="panel">
+                    <h2 style="color: #2ecc71;">LEVEL YAKUNLANDI!</h2>
+                    <div id="win-level-name" style="font-size: 13px; color: #ffd700; margin-bottom: 8px;"></div>
+                    <div id="win-stars" class="win-stars-display"></div>
+
+                    <div class="win-stats">
+                        <div class="win-row">
+                            <span>Vaqt:</span>
+                            <span id="win-time" class="win-val">00:00.0</span>
+                        </div>
+                        <div class="win-row">
+                            <span>To'plangan Gems:</span>
+                            <span id="win-gems" class="win-val">3 / 3</span>
+                        </div>
+                        <div class="win-row">
+                            <span>O'limlar soni:</span>
+                            <span id="win-deaths" class="win-val">0</span>
+                        </div>
+                    </div>
+
+                    <div class="btn-row">
+                        <button id="btn-next-level" class="btn primary">KEYINGI LEVEL ▶</button>
+                        <button id="btn-replay" class="btn">QAYTA O'YNASH</button>
+                        <button id="btn-win-levels" class="btn">MENYU</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Modal -->
+            <div id="modal-settings" class="modal hidden">
+                <div class="panel" style="max-width: 540px;">
+                    <h2>SOZLAMALAR</h2>
+                    
+                    <div class="settings-group">
+                        <div class="setting-row">
+                            <span>Musiqa (BGM):</span>
+                            <div>
+                                <input type="range" id="slider-bgm" min="0" max="1" step="0.05" value="0.5">
+                                <span id="val-bgm">50%</span>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <span>Ovozlar (SFX):</span>
+                            <div>
+                                <input type="range" id="slider-sfx" min="0" max="1" step="0.05" value="0.7">
+                                <span id="val-sfx">70%</span>
+                            </div>
+                        </div>
+                        <div class="setting-row">
+                            <span>Ekran Rejimi:</span>
+                            <button id="btn-fullscreen" class="btn btn-sm">FULLSCREEN ⛶</button>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <div style="font-size: 11px; color: #ffd700; margin-bottom: 8px;">BOSHQARUV QO'LLANMASI:</div>
+                        <div class="controls-guide">
+                            <div><span>A / D</span> yoki <span>← / →</span> : Yurish, Qutini surish</div>
+                            <div><span>Space</span> yoki <span>W / ↑</span> : Sakrash (Jump Buffer + Coyote Time)</div>
+                            <div><span>E</span> yoki <span>Enter</span> : Qutini ushlab tortish/surish</div>
+                            <div><span>Esc</span> yoki <span>P</span> : Pauza menyusi</div>
+                        </div>
+                    </div>
+
+                    <div class="settings-group">
+                        <div style="font-size: 11px; color: #ffd700; margin-bottom: 8px;">PROGRESSNI SAQLASH (JSON):</div>
+                        <div class="btn-row" style="margin-top: 8px;">
+                            <button id="btn-export-save" class="btn btn-sm">EKSPORT (JSON)</button>
+                            <button id="btn-import-save" class="btn btn-sm">IMPORT (JSON)</button>
+                            <input type="file" id="file-import" accept=".json" style="display: none;">
+                        </div>
+                        <div style="margin-top: 10px;">
+                            <button id="btn-reset-save" class="btn btn-sm danger">PROGRESSNI TOZALASH</button>
+                        </div>
+                    </div>
+
+                    <button id="btn-close-settings" class="btn">YOPISH</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts in strict dependency order -->
+    <script src="js/audio.js"></script>
+    <script src="js/assets.js"></script>
+    <script src="js/particles.js"></script>
+    <script src="js/physics.js"></script>
+    <script src="js/traps.js"></script>
+    <script src="js/puzzles.js"></script>
+    <script src="js/player.js"></script>
+    <script src="js/levels.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>
